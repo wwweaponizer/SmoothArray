@@ -5,10 +5,10 @@ Coders love [dynamic arrays](https://en.wikipedia.org/wiki/Dynamic_array).
 I do. But I never felt the need to publish one before.
 
 There are many dynamic arrays in the world, including the always-popular:
--Python _list_
--JavaScript _Array_
--Java _ArrayList_
--C++ _std::vector_
+- Python _list_
+- JavaScript _Array_
+- Java _ArrayList_
+- C++ _std::vector_
 
 Those popular arrays work so well that there is almost never a need to
 write your own. Experts have carefully-reviewed the popular tools and
@@ -57,7 +57,7 @@ number to the end of the original array.
 Dynamic arrays hide that manual work for us.
 
 When pushing or appending new values to the end of a dynamic array, the
-array irself keeps track of the size and capacity of whatever underlying
+array itself keeps track of the size and capacity of whatever underlying
 data structure is being used, maybe a C array but we don't care, and the
 data gets copied silently and automatically whenever the memory needs to
 be reallocated.
@@ -69,7 +69,7 @@ operation) looks like this:
 myarray.append(5)
 ```
 
-# Speed
+## Speed
 
 The append function for dynamic arrays in Python or the equivalent
 functions in every language I can think of all run in [amortized constant time](https://en.wikipedia.org/wiki/Amortized_analysis#Dynamic_Array), a.k.a. amortized O(1) time,
@@ -92,5 +92,6 @@ ahead and divide O(n) by n\*O(1) giving us the amortized constant time
 _.append_ that all the popular dynamic arrays feature.
 
 I recently started thinking about that word "amortized", for fun. What
-would it mean if a dynamic array **actually** could append in O(1) time?
+would it mean if a dynamic array **actually** could append in O(1) time,
+non-amortized?
 
