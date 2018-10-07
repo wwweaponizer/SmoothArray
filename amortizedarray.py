@@ -5,7 +5,7 @@
 AmortizedArray()
 
 The AmortizedArray() class, a more-traditional dynamic array with
-amortized-constant-time O(1) appends.
+amortized-constant-time O(1) append.
 
 >>> AmortizedArray()
 AmortizedArray()
@@ -90,6 +90,8 @@ else:
     from collections import MutableSequence        # Python 2
 
 class AmortizedArray(MutableSequence):
+    """Dynamic array with amortized O(1) time append."""
+
     def __init__(self, seq=None):
         self._capacity = 0    # array memory allocated
         self._size = 0        # array memory in use (len)

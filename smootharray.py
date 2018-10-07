@@ -4,7 +4,7 @@
 SmoothArray()
 
 The SmoothArray() class, a dynamic array with constant-time (not
-amortized) O(1) appends.
+amortized) O(1) append.
 
 Some doctests:
 
@@ -91,7 +91,7 @@ else:
     from collections import MutableSequence        # Python 2
 
 class SmoothArray(MutableSequence):
-    """Dynamic array with constant (not amortized) O(1) time appends."""
+    """Dynamic array with constant (not amortized) O(1) time append."""
 
     # TODO: support slice indexes
 
@@ -175,7 +175,7 @@ class SmoothArray(MutableSequence):
         # Move an item from the old array to the new array.
         # This is how the SmoothArray can have O(1) append(),
         # because append() always moves zero or one items, never
-        # the full array or a fraction of the array size.
+        # the full array or a proportion of the full array size.
         if self._move < self._stop:
             self._data2[self._move] = self._data1[self._move]
             self._move += 1
