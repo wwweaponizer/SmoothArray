@@ -1,4 +1,4 @@
-# SmoothArray: A Dynamic Array With (Non-Amoritzed) Constant-Time Append
+# SmoothArray: A Dynamic Array With (Non-Amortized) Constant-Time Append
 
 
 Coders love [dynamic arrays](https://en.wikipedia.org/wiki/Dynamic_array).
@@ -11,7 +11,7 @@ There are many dynamic arrays out there, including the popular:
 - C++ _std::vector_
 
 Those popular arrays work so well that there's almost never any need to
-write your own. Experts have carefully-reviewed the popular tools and
+write your own. Experts have carefully reviewed the popular tools and
 those tools come to us highly-optimized.
 
 ## The Problem
@@ -202,7 +202,7 @@ choices always have trade-offs.
 
 The trade-off that SmoothArray makes is that all appends that **don't**
 trigger a memory reallocation are 1-2 microseconds (us) slower than
-AmoritzedArray's appends. A couple _us_ in this case, while still very
+AmortizedArray's appends. A couple _us_ in this case, while still very
 fast, is technically around 10%-50% slower per call.
 
 That slowness during regular appends is due to overhead from the more
@@ -214,9 +214,9 @@ is probably faster over time. But imagine an application that wanted to
 append an item while answering requests and always in less than, say, 10
 milliseconds (ms) per request.
 
-AmoritzedArray would do fine until the array filled up to about 100,000
+AmortizedArray would do fine until the array filled up to about 100,000
 items. Then it would start failing requests every time the array grew.
 
-SmoothArray would be nearly as fast as AmoritzedArray, but it would
+SmoothArray would be nearly as fast as AmortizedArray, but it would
 never cause requests to fail due to growing the array. So smoooooth.
 
