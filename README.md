@@ -63,7 +63,7 @@ data structure is being used, maybe a C array for example, but we don't
 care. The data gets copied silently and automatically whenever the memory
 needs to be reallocated.
 
-In Python, the code to append (including the possible implicit resize
+In Python, the code for appending (including the possible implicit resize
 operation) looks like this:
 
 ```
@@ -106,14 +106,14 @@ would run in O(n) time, and O(n) is obviously not O(1).
 
 Instead of copying _n_ memory items, what if we copied nothing? One
 "solution" would be to never copy the array. We could allocate all the
-memory in the system to one Gigantic array. That huge array would never
+memory in the system into one Gigantic array. That huge array would never
 need to be reallocated. Appending would work great, resizing the array by
 +1 for each call, in O(1) time, all the way up until hitting the system's
 out of memory error.
 
-This design would be great for the performance of the
+The Gigantic design would be great for the performance of the
 dynamic array, but at the cost of being terribly wasteful of memory
-resources.
+resources. We coders demand efficiency _and_ convienence.
 
 ## Optimization Technique
 
@@ -153,8 +153,8 @@ allocator will be considered not part of the design. On some systems it
 is [guaranteed to be O(1)](https://stackoverflow.com/questions/282926/time-complexity-of-memory-allocation).
 
 Dynamic arrays typically double their capacity every time they reallocate.
-A true-O(1) append function can't copy _n_ items, but what does work is to
-copy _1_ item, every call.
+A true-O(1) append function can't copy _n_ items, but what I realized does
+work is for the dynamic array to copy _1_ item, every call.
 
 ## A Smoother Dynamic Array: SmoothArray
 
@@ -177,18 +177,16 @@ way except for the copying.
 
 Here's how the timings of the two append techniques compare:
 
-| AmortizedArray    | SmoothArray       |
-| ----------------- | ----------------- |
-| size     |  speed | size     |  speed |
-| -----    | ------ | -----    | ------ |
-|     2048 |   0 ms |     2048 |   0 ms |
-|     4096 |   1 ms |     4096 |   0 ms |
-|     8192 |   1 ms |     8192 |   0 ms |
-|    16384 |   2 ms |    16384 |   0 ms |
-|    32768 |   4 ms |    32768 |   0 ms |
-|    65536 |   8 ms |    65536 |   0 ms |
-|   131072 |  16 ms |   131072 |   0 ms |
-|   262144 |  33 ms |   262144 |   0 ms |
-|   524288 |  68 ms |   524288 |   1 ms |
-|  1048576 | 144 ms |  1048576 |   2 ms |
+| size    | AmortizedArray | SmoothArray    |
+| ------- | -------------- | -------------- |
+|    2048 |   0 ms         |   0 ms         |
+|    4096 |   1 ms         |   0 ms         |
+|    8192 |   1 ms         |   0 ms         |
+|   16384 |   2 ms         |   0 ms         |
+|   32768 |   4 ms         |   0 ms         |
+|   65536 |   8 ms         |   0 ms         |
+|  131072 |  16 ms         |   0 ms         |
+|  262144 |  33 ms         |   0 ms         |
+|  524288 |  68 ms         |   1 ms         |
+| 1048576 | 144 ms         |   2 ms         |
 
