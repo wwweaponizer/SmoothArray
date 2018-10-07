@@ -145,9 +145,9 @@ help us at all to make append be O(n).
 Thinking about reallocating "always" did make me wonder if reallocating and
 copying necessarily had to happen at the same time.
 
-System memory allocation can often be O(1), or if slower, perhaps O(log x)
-or O(x). And, we can often assume that _x_ is not related to our _n_, the
-size of our array. For the purposes of this discussion the system's memory
+System memory allocation can be O(1), or if slower, will likely be O(log x)
+or O(x). And, _x_ might not even be related to our _n_, the size of our
+array. For the purposes of this discussion the system's memory
 allocator will be considered not part of the design. On some systems it
 is [guaranteed to be O(1)](https://stackoverflow.com/questions/282926/time-complexity-of-memory-allocation).
 
