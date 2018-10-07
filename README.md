@@ -4,8 +4,7 @@
 Coders love [dynamic arrays](https://en.wikipedia.org/wiki/Dynamic_array).
 I do too, but I never felt the urge to publish one before now.
 
-There are many dynamic arrays already out there, including the
-always-popular:
+There are many dynamic arrays out there, including the popular:
 - Python _list_
 - JavaScript _Array_
 - Java _ArrayList_
@@ -13,7 +12,7 @@ always-popular:
 
 Those popular arrays work so well that there's almost never any need to
 write your own. Experts have carefully-reviewed the popular tools and
-those tools come to us already highly-optimized.
+those tools come to us highly-optimized.
 
 ## The Problem
 
@@ -160,9 +159,11 @@ work is for the dynamic array to copy _1_ item, every call.
 
 This is the technique used by SmoothArray.
 
+SmoothArray's append only ever copies zero or one items.
+
 When a SmoothArray fills up, it allocates a new memory space that is double
 the capacity of the previous memory. Exactly one old item is then copied
-from the old memory into the new. Then the new item is appended.
+from the old memory into the new. Finally, the new item is appended.
 
 Because the memory capacity was just doubled, if appends keep coming, then
 the new, bigger array will fill up at exactly the same time that the last
@@ -175,18 +176,47 @@ allow comparison to the traditional amortized-O(1)-append method.
 SmoothArray and AmortizedArray are intended to be identical in every
 way except for the copying.
 
-Here's how the timings of the two append techniques compare:
+Here's how the timings of the two append techniques compare on my system:
 
-| size    | AmortizedArray | SmoothArray    |
-| ------- | -------------- | -------------- |
-|    2048 |   0 ms         |   0 ms         |
-|    4096 |   1 ms         |   0 ms         |
-|    8192 |   1 ms         |   0 ms         |
-|   16384 |   2 ms         |   0 ms         |
-|   32768 |   4 ms         |   0 ms         |
-|   65536 |   8 ms         |   0 ms         |
-|  131072 |  16 ms         |   0 ms         |
-|  262144 |  33 ms         |   0 ms         |
-|  524288 |  68 ms         |   1 ms         |
-| 1048576 | 144 ms         |   2 ms         |
+| capacity | AmortizedArray | SmoothArray    |
+| -------  | -------------- | -------------- |
+|    1024  |   0 ms         |   0 ms         |
+|    2048  |   0 ms         |   0 ms         |
+|    4096  |   1 ms         |   0 ms         |
+|    8192  |   1 ms         |   0 ms         |
+|   16384  |   2 ms         |   0 ms         |
+|   32768  |   4 ms         |   0 ms         |
+|   65536  |   8 ms         |   0 ms         |
+|  131072  |  16 ms         |   0 ms         |
+|  262144  |  33 ms         |   0 ms         |
+|  524288  |  68 ms         |   1 ms         |
+| 1048576  | 144 ms         |   2 ms         |
+
+This test adds about one million items to the array. When the last item
+is added, SmoothArray's append runs 72 times faster than AmortizedArray's.
+
+## Trade-Offs
+
+Seventy-two times faster sounds great! Where's the trade off? Optimization
+choices always have trade-offs.
+
+The trade-off that SmoothArray makes is that all appends that **don't**
+trigger a memory reallocation are 1-2 microseconds (us) slower than
+AmoritzedArray's appends. A couple _us_ in this case, while still very
+fast, is technically around 10%-50% slower per call.
+
+That slowness during regular appends is due to overhead from the more
+complicated logic required for SmoothArray to manage the copying over time.
+
+So wait: which is better, AmortizedArray or SmoothArray? The answer, as
+always, depends on the use case. For most applications, AmortizedArray
+is probably faster over time. But imagine an application that wanted to
+append an item while answering requests and always in less than, say, 10
+milliseconds (ms) per request.
+
+AmoritzedArray would do fine until the array filled up to about 100,000
+items. Then it would start failing requests every time the array grew.
+
+SmoothArray would be nearly as fast as AmoritzedArray, but it would
+never cause requests to fail due to growing the array. So smoooooth.
 
