@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 """
 AmortizedArray()
 
-The AmortizedArray() class, a more-traditional dynamic array with
+The AmortizedArray() class, a dynamic array with
 amortized-constant-time O(1) append.
 
 >>> AmortizedArray()
