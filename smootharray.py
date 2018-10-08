@@ -1,4 +1,4 @@
-#/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 SmoothArray()
@@ -93,8 +93,6 @@ else:
 class SmoothArray(MutableSequence):
     """Dynamic array with constant (not amortized) O(1) time append."""
 
-    # TODO: support slice indexes
-
     def __init__(self, seq=None):
         self._capacity = 0    # array memory allocated
         self._size = 0        # array memory in use (len)
@@ -117,46 +115,56 @@ class SmoothArray(MutableSequence):
         return self._size
 
     def __getitem__(self, i):
-        if not isinstance(i, Integral):
-            raise TypeError('indices must be integers or slices')
-        if i < 0:
-            i = self._size+i
-        if not (0 <= i < self._size):
-            raise IndexError('index out of range')
+        # TODO: support slice indexes
+        if isinstance(i, Integral):
+            if i < 0:
+                i = self._size+i
+            if not (0 <= i < self._size):
+                raise IndexError('index out of range')
 
-        if self._move <= i < self._stop:
-            return self._data1[i]
+            if self._move <= i < self._stop:
+                return self._data1[i]
+            else:
+                return self._data2[i]
+        elif isinstance(i, slice):
+            raise RuntimeError('slice notation is unimplemented')
         else:
-            return self._data2[i]
+            raise TypeError('indices must be integers or slices')
 
     def __setitem__(self, i, item):
-        if not isinstance(i, Integral):
-            raise TypeError('indices must be integers or slices')
-        if i < 0:
-            i = self._size+i
-        if not (0 <= i < self._size):
-            raise IndexError('index out of range')
+        if isinstance(i, Integral):
+            if i < 0:
+                i = self._size+i
+            if not (0 <= i < self._size):
+                raise IndexError('index out of range')
 
-        if self._move <= i < self._stop:
-            self._data1[i] = item
+            if self._move <= i < self._stop:
+                self._data1[i] = item
+            else:
+                self._data2[i] = item
+        elif isinstance(i, slice):
+            raise RuntimeError('slice notation is unimplemented')
         else:
-            self._data2[i] = item
+            raise TypeError('indices must be integers or slices')
 
     def __delitem__(self, i):
-        if not isinstance(i, Integral):
-            raise TypeError('indices must be integers or slices')
-        if i < 0:
-            i = self._size+i
-        if not (0 <= i < self._size):
-            raise IndexError('index out of range')
+        if isinstance(i, Integral):
+            if i < 0:
+                i = self._size+i
+            if not (0 <= i < self._size):
+                raise IndexError('index out of range')
 
-        for j in range(i+1, self._size):
-            self[j-1] = self[j]
-        self._size -= 1
-        if i <= self._move:
-            self._move -= 1
-        if i < self._stop:
-            self._stop -= 1
+            for j in range(i+1, self._size):
+                self[j-1] = self[j]
+            self._size -= 1
+            if i <= self._move:
+                self._move -= 1
+            if i < self._stop:
+                self._stop -= 1
+        elif isinstance(i, slice):
+            raise RuntimeError('slice notation is unimplemented')
+        else:
+            raise TypeError('indices must be integers or slices')
 
     def append(self, item):
         # Initialize the array memory if this is the first append.
@@ -212,6 +220,10 @@ class SmoothArray(MutableSequence):
         c._move = self._move
         c._stop = self._stop
         return c
+
+    if sys.version_info.major < 3:
+        def clear(self):
+            self.__init__()
 
 if __name__ == '__main__':
     import doctest
